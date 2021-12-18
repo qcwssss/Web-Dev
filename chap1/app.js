@@ -1,8 +1,4 @@
-function hello(name) {
-    console.log('Hello ' + name);
-}
-
-hello('Mosh');
+const logger = require('./logger')
 
 // node doesn't have window or document obejct
 // console.log(window);
@@ -11,3 +7,7 @@ hello('Mosh');
 
 // module
 // console.log(module);
+
+// console.log(logger);
+// logger.log('message');
+logger('hello');
