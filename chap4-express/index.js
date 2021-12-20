@@ -27,9 +27,17 @@ app.get('/api/courses/:id', (req, res) => {
 });
 
 app.post('/api/courses', (req, res) => {
-    const schema = {
+    const schema = Joi.object({
         course: Joi.string().min(3).required()
-    };
+    });
+    // console.log(req.body);
+    const result = schema.validate(req.body);
+    // console.log(result);
+
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
 
     const course = {
         id: courses.length + 1,
