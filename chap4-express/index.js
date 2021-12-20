@@ -1,8 +1,13 @@
 const Joi = require('joi');
+const logger = require('./logger');
 const express = require('express');
 const app = express();
 
-app.use(express.json());
+app.use(express.json()); // req.body -> json
+app.use(express.urlencoded({ extended: true })); // key=value && key=value
+
+app.use(logger);
+
 
 const courses = [
     {id: 1, course: 'math1'},
