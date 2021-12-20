@@ -1,3 +1,4 @@
+const config = require('config');
 const helmet = require('helmet');
 const Joi = require('joi');
 const logger = require('./logger');
@@ -5,15 +6,21 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 
+// console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+// console.log(`app: ${app.get('env')}`);
+
 app.use(express.json()); // req.body -> json
 app.use(express.urlencoded({ extended: true })); // key=value && key=value
 app.use(express.static('public'));
 
-app.use(logger);
-
 app.use(helmet());
-app.use(morgan('tiny'));
 
+if (app.get('env') === 'development') {
+    app.use(morgan('tiny'));
+    console.log('Morgan enabled...');
+}
+
+app.use(logger);
 
 const courses = [
     {id: 1, course: 'math1'},
