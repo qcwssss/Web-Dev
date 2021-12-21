@@ -1,9 +1,13 @@
 {
   "dependencies": {
     "config": "^3.3.6",
+    "cross-env": "^7.0.3",
     "express": "^4.17.2",
     "helmet": "^4.6.0",
     "joi": "^17.5.0",
+    "scripts": {
+      "start": "set NODE_ENV=production && node app"
+    },
     "morgan": "^1.10.0"
   }
 }

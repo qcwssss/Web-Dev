@@ -6,14 +6,15 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 
-// console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
-// console.log(`app: ${app.get('env')}`);
-
 app.use(express.json()); // req.body -> json
 app.use(express.urlencoded({ extended: true })); // key=value && key=value
 app.use(express.static('public'));
-
 app.use(helmet());
+
+// Configuration
+console.log('Application Name: ' + config.get('name'));
+console.log('Mail Server: ' + config.get('mail.host'));
+// console.log('Mail Password: ' + config.get('mail.password'));
 
 if (app.get('env') === 'development') {
     app.use(morgan('tiny'));
