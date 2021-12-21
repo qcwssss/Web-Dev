@@ -3,8 +3,10 @@ const config = require('config');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const Joi = require('joi');
-const logger = require('./logger');
-const courses = require('./courses');
+const logger = require('./midware/logger');
+
+const courses = require('./routes/courses');
+const home = require('./routes/home');
 const express = require('express');
 const app = express();
 
@@ -12,6 +14,7 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', './views');
 
+// midware
 app.use(express.json()); // req.body -> json
 app.use(express.urlencoded({ extended: true })); // key=value && key=value
 app.use(express.static('public'));
@@ -29,9 +32,6 @@ if (app.get('env') === 'development') {
 
 app.use(logger);
 
-app.get('/', (req, res) => {
-    res.render('index', { title: 'My Express App', message: 'Hello'});
-}); 
 
 // PORT
 const port = process.env.PORT || 3000;
