@@ -1,12 +1,15 @@
-const startupDebugger = require('debug')('app:startip');
-const dbDebugger = require('debug')('app:db');
+const debug = require('debug')('app:startip');
 const config = require('config');
 const helmet = require('helmet');
+const morgan = require('morgan');
 const Joi = require('joi');
 const logger = require('./logger');
 const express = require('express');
-const morgan = require('morgan');
 const app = express();
+
+// Templating engine
+app.set('view engine', 'pug');
+app.set('views', './views');
 
 app.use(express.json()); // req.body -> json
 app.use(express.urlencoded({ extended: true })); // key=value && key=value
@@ -22,9 +25,6 @@ if (app.get('env') === 'development') {
     startupDebugger('Morgan enabled...');
 }
 
-// DB work...
-dbDebugger('Connected to the database...');
-
 app.use(logger);
 
 const courses = [
@@ -34,7 +34,7 @@ const courses = [
 ]
 
 app.get('/', (req, res) => {
-    res.send('Hello World, Brandon');
+    res.render('index', { title: 'My Express App', message: 'Hello'});
 }); 
 
 app.get('/api/courses', (req, res) => {
