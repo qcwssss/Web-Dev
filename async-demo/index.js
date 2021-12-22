@@ -1,12 +1,17 @@
 console.log('Before');
-getUser(1, (user) => {
-    // console.log('User', user);
-    // Get the repos
-    getRepositories(user.username, (userInfo) => {
-        console.log('Repos', userInfo.repos);        
-    })
+getUser(1, getRepositories);
 
-});
+function getRepositories(user) {
+    getRepositories(user.username, getCommits);
+}
+
+function getCommits(repos) {
+    getCommits(repo, dispalyCommits);
+}
+
+function dispalyCommits(commits) {
+    console.log(commits);
+}
 
 console.log('After');
 
@@ -23,6 +28,6 @@ function getUser(id, callback) {
 
 function getRepositories(username, callback) {
     setTimeout(() => {
-        callback({username: username, repos: ['repo1', 'repo2', 'repo3']})
+        callback(['repo1', 'repo2', 'repo3'])
     }, 2000);
 }
