@@ -6,11 +6,11 @@ p.then(result => console.log(result));
 // const p_rej = Promise.reject(new Error('reason for rejection...'));
 // p_rej.catch(err => console.log(err));
 
-const p1 = new Promise((reslove) => {
+const p1 = new Promise((reslove, reject) => {
     setTimeout(() => {
         console.log('Async operation 1...');
-        reslove(1);
-    }, 1000);
+        reject(new Error('something failed'));
+    }, 2000);
 });
 
 const p2 = new Promise((reslove) => {
@@ -20,5 +20,7 @@ const p2 = new Promise((reslove) => {
     }, 1000);
 });
 
-Promise.all([p1, p2])
-.then(result => console.log(result));
+// all vs. race
+Promise.race([p1, p2])
+.then(result => console.log(result))
+.catch(err => console.log('Error:', err.message));

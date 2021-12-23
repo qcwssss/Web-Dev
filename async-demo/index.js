@@ -13,17 +13,35 @@ console.log('Before');
 //     console.log(commits);
 // }
 
+// Promise-based approach
+
 getUser(1)
     .then(user => getRepositories(user.username))
     .then(repos => getCommits(repos[0]))
     .then(commits => console.log('Commits', commits))
     .catch(err => console.log('Error', err.message));
 
+
+// async/await approach
+async function dispalyCommits() {
+    try {
+        const user = await getUser(1);
+        const repos = await getRepositories(user.username);
+        const commits = await getCommits(repos[0]);
+        console.log(commits);
+    } 
+    catch (err) {
+        console.log('Error:', err.message);
+    }
+
+}
+
+dispalyCommits();
+
+
 console.log('After');
 
 // Callbacks
-// Promises
-// async/await
 
 function getUser(id) {
     return new Promise((resolve, reject) => {
@@ -38,7 +56,9 @@ function getUser(id) {
 function getRepositories(username) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            resolve(['repo1', 'repo2', 'repo3'])
+            // resolve(['repo1', 'repo2', 'repo3']);
+            reject(new Error('Could not get the repos'));
+            
         }, 2000);
     });
 }
