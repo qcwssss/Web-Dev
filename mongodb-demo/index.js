@@ -1,6 +1,3 @@
-const {
-    MongoNetworkError
-} = require('mongodb');
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/playground')
@@ -61,4 +58,56 @@ async function getCourses() {
 }
 
 // createCourse();
-getCourses();
+// getCourses();
+
+// UPDATE
+
+// Approach: Query first
+// findById()
+// Modify its properties
+// save()
+
+// Approach: Update first
+// Update directly
+// Optionally: get the updated document
+async function updateCourse(id) {
+    const course = await Course.findById(id);
+    if (!course) return;
+
+    course.isPublished = true;
+    course.author = 'Another dude';
+
+    // course.set({
+    //     isPublished: true,
+    //     author: 'Another Author'
+    // });
+
+    const result = await course.save();
+    console.log(result);
+}
+
+async function updateCourseDirectly(id) {
+    const result = await Course.updateOne({_id: id }, {
+        $set: {
+            author: 'Mosh',
+            isPublished: false
+        }
+    });
+
+    console.log(result);
+}
+
+
+async function updateAndFind(id) {
+    const course = await Course.findByIdAndUpdate(id, {
+        $set: {
+            author: 'Jason',
+            isPublished: true
+        }
+    }, {new: true} );
+    console.log(course);
+}
+
+// updateCourse("61c51ed52108f8fb99dfb6a6");
+// updateCourseDirectly("61c51ed52108f8fb99dfb6a6");
+updateAndFind("61c51ed52108f8fb99dfb6a6");
