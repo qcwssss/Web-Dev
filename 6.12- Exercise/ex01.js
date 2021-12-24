@@ -52,7 +52,7 @@ function getTopMovies() {
 function sendEmail(email, movies) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            resolve('email found');
+            resolve('email is:'+ email);
         }, 4000);
     })
 
