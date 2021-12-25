@@ -5,14 +5,29 @@ mongoose.connect('mongodb://localhost/playground')
     .catch(err => console.error('Could no connect to MongoDB...', err));
 
 const courseSchema = new mongoose.Schema({
-    name: String,
+    name: { 
+        type: String, 
+        required: true,
+        minlength: 5,
+        maxlength: 255
+        // match: /pattern/ 
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ['web', 'mobile', 'network']
+    },
     author: String,
     tags: [String],
     date: {
         type: Date,
         default: Date.now
     },
-    isPublished: Boolean
+    isPublished: Boolean,
+    price: {
+        type: Number,
+        required: function() { return this.isPublished; }
+    }
 });
 
 // Classes, objects
@@ -22,13 +37,22 @@ const Course = mongoose.model('Course', courseSchema); // class
 async function createCourse() {
     const course = new Course({
         name: 'Angular Course',
+        category: '-',
         author: 'Mosh',
         tags: ['angular', 'frontend'],
-        isPublished: true
+        isPublished: true,
+        price: 15
     });
 
-    const result = await course.save();
-    console.log(result);
+    try {
+        await course.validate();
+        // const result = await course.save();
+        // console.log(result);
+    }
+    catch (ex) {
+        console.log(ex.message);
+    }
+
 }
 
 // mongoDB query operator
@@ -57,7 +81,7 @@ async function getCourses() {
     console.log(courses);
 }
 
-// createCourse();
+createCourse();
 // getCourses();
 
 // UPDATE
