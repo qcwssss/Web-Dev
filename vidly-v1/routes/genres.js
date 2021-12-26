@@ -17,6 +17,8 @@ const genreSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+        minlength: 5,
+        maxlength: 50,
     }
 });
 
@@ -33,11 +35,19 @@ async function createGenre(newGenre) {
         for (field in ex.errors) {
             console.log(ex.errors[field].message);
         }
-
     }
 }
 
-router.get('/', (req, res) => {
+async function getGenres() {
+    const genres = await Genre
+        .find()
+        .select({_id: 1, name: 1});
+    console.log(genres);
+    return genres;
+}
+
+router.get('/', async (req, res) => {
+    const genres = await Genre.find().select({_id: 1, name: 1});;
     res.send(genres);
 });
 
@@ -45,25 +55,18 @@ router.get('/', (req, res) => {
 router.put('/:id', (req, res) => {
     const genre = genres.find(g => g.id === parseInt(req.params.id));
     if (!genre) return res.status('The genre with the given ID not found');
-    // Validate
-    const { error } = validateGenre(req.body);
-    if (error) return res.status(400).send(result.error.details[0].message);
+
     // Update
     genre.name = req.body.name;
-    res.send(genre);
+    res.send();
 });
 
 // Add genre
 router.post('/', (req, res) => {
     const { error } = validateGenre(req.body);
     if (error) return res.status(400).send(result.error.details[0].message);
-    // const genre = {
-    //     id: genres.length + 1,
-    //     name: req.body.name
-    // };
-    // genres.push(genre);
     createGenre(req.body.name);
-    res.send('Success');
+    res.send(getGenres());
 });
 
 // Delete genre
