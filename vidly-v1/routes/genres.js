@@ -3,11 +3,39 @@ const router = express.Router();
 const Joi = require('joi');
 const { append } = require('vary');
 
+const mongoose = require('mongoose');
+const { func } = require('joi');
+
+
 const genres = [
     {id: 1, name: 'Action'},
     {id: 2, name: 'Horror'},
     {id: 3, name: 'Romance'}
 ]
+
+const genreSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    }
+});
+
+const Genre = mongoose.model('Genre', genreSchema);
+
+async function createGenre(newGenre) {
+    const genre = new Genre({
+        name: newGenre,
+    });
+    try {
+        const result = await genre.save();
+        console.log(result);
+    } catch (ex) {
+        for (field in ex.errors) {
+            console.log(ex.errors[field].message);
+        }
+
+    }
+}
 
 router.get('/', (req, res) => {
     res.send(genres);
@@ -29,13 +57,13 @@ router.put('/:id', (req, res) => {
 router.post('/', (req, res) => {
     const { error } = validateGenre(req.body);
     if (error) return res.status(400).send(result.error.details[0].message);
-    // console.log(req.body);
-    const genre = {
-        id: genres.length + 1,
-        name: req.body.name
-    };
-    genres.push(genre);
-    res.send(genre);
+    // const genre = {
+    //     id: genres.length + 1,
+    //     name: req.body.name
+    // };
+    // genres.push(genre);
+    createGenre(req.body.name);
+    res.send('Success');
 });
 
 // Delete genre
