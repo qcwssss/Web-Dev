@@ -36,7 +36,17 @@ router.post('/', (req, res) => {
     };
     genres.push(genre);
     res.send(genre);
-})
+});
+
+// Delete genre
+router.delete('/:id', (req, res) => {
+    const genre = genres.find(g => g.id === parseInt(req.params.id));
+    if (!genre) return res.status('The genre with the given ID not found');
+
+    const index = genres.indexOf(genre);
+    genres.splice(index, 1); // (start, deleteCount)
+    res.send(genre);
+});
 
 function validateGenre(genre) {
     const schema = Joi.object({ 

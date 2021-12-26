@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
-const router = require('./routes/genres')
+const genres = require('./routes/genres')
 
 app.use(express.json()); // body parser
-app.use('/api', router);
+app.use('/api/genres', genres);
 
 const port = 3000 || process.env.PORT;
 app.listen(port, ()=> {
