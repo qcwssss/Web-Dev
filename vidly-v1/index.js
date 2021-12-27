@@ -11,7 +11,7 @@ mongoose.connect('mongodb://localhost/playground')
 
 app.use(express.json()); // body parser
 app.use('/api/genres', genres);
-app.use('api/customers', customers)
+app.use('/api/customers', customers)
 
 const port = 3000 || process.env.PORT;
 app.listen(port, ()=> {
