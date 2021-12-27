@@ -1,21 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Joi = require('joi');
-const { append } = require('vary');
-
 const mongoose = require('mongoose');
+const { append } = require('vary');
 const { func } = require('joi');
 
-const genreSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        minlength: 5,
-        maxlength: 50,
-    }
-});
+const {Genre, validate} = require('../models/Genre');
 
-const Genre = mongoose.model('Genre', genreSchema);
 
 router.get('/', async (req, res) => {
     const genres = await Genre.find().sort({name: 1})
@@ -24,7 +14,7 @@ router.get('/', async (req, res) => {
 
 // Add genre
 router.post('/', async (req, res) => {
-    const { error } = validateGenre(req.body);
+    const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     
     let genre = new Genre({ name: req.body.name});
@@ -35,7 +25,7 @@ router.post('/', async (req, res) => {
 
 // Update genre
 router.put('/:id', async (req, res) => {
-    const { error } = validateGenre(req.body);
+    const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     
     const genre = await Genre.findByIdAndUpdate(
@@ -60,12 +50,5 @@ router.get('/:id', async (req, res) => {
     if (!genre) return res.status(404).send('The genre with the given ID not found');
     res.send(genres);
 });
-
-function validateGenre(genre) {
-    const schema = Joi.object({ 
-        name: Joi.string().min(3).required()
-    });
-    return schema.validate(genre);
-}
 
 module.exports = router;
