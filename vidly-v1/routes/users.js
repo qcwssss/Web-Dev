@@ -14,14 +14,14 @@ router.post('/', async (req, res) => {
     
     let user = await User.findOne({ email: req.body.email });
     if (user) return res.status(400).send('User already registered');
-
+    // console.log('User is:' , user);
     user = new User({
         name: req.body.name,
-        password: req.body.name,
-        email: req.body.name,
+        password: req.body.password,
+        email: req.body.email,
     });
     
-    await user.save();
+    user = await user.save();
     res.send(user);
 });
 
