@@ -17,7 +17,6 @@ const customerSchema = new mongoose.Schema({
     },
     isGold: {
         type: Boolean,
-        // required: true,
         default: false,
     }
 });
