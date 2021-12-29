@@ -1,11 +1,8 @@
+const auth = require('../middleware/auth');
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const { append } = require('vary');
-const { func } = require('joi');
 
 const {Genre, validate} = require('../models/Genre');
-
 
 router.get('/', async (req, res) => {
     const genres = await Genre.find().sort({name: 1})
@@ -13,7 +10,7 @@ router.get('/', async (req, res) => {
 });
 
 // Add genre
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     
@@ -24,7 +21,7 @@ router.post('/', async (req, res) => {
 
 
 // Update genre
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     
@@ -37,7 +34,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete genre
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     const genre = await Genre.findByIdAndRemove(req.params.id); 
   
     if (!genre) return res.status(404).send('The genre with the given ID not found');
